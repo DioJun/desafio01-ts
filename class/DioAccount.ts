@@ -1,42 +1,64 @@
 export abstract class DioAccount {
-  private name: string
+  private readonly name: string 
   private readonly accountNumber: number
-  balance: number = 0
-  private status: boolean = true
+  private balance: number = 0
+  private status:  boolean = true
+  private withdraw: number = 0
+  private deposit: number = 0
+  private loan: number = 0
 
-  constructor(name: string, accountNumber: number){
-    this.name = name
-    this.accountNumber = accountNumber
+  constructor(name: string, accountNumber: number) {
+      this.name = name
+      this.accountNumber = accountNumber
   }
 
-  setName = (name: string): void => {
-    this.name = name
-    console.log('Nome alterado com sucesso!')
+  setDeposit = (deposit: number): number => {
+      this.deposit = deposit
+      this.balance += deposit
+      return this.balance
+  }
+
+  setWithdraw = (withdraw: number): number => {
+      this.withdraw = withdraw
+      if(this.status === true && this.balance > withdraw) {
+          this.balance -=withdraw
+      } else {
+          throw new Error('Saldo insuficiente para saque!')
+      }
+      return this.balance
+  }
+
+  setLoan = (loan: number): number => {
+      this.loan = loan
+      if(this.status === true){
+          this.balance += loan
+      } else{
+          throw new Error("A conta está fechada.")
+      }
+      return this.balance
   }
 
   getName = (): string => {
-    return this.name
+      return this.name
   }
 
-  deposit = (): void => {
-    if(this.validateStatus()){
-      console.log('Voce depositou')
-    }
+  getBalance = (): number => {
+      return this.balance
   }
 
-  withdraw = (): void => {
-    console.log('Voce sacou')
+  setBalance = (): number => {
+      return this.balance
   }
 
-  getBalance = (): void => {
-    console.log(this.balance)
+  getDeposit = (): number => {
+      return this.deposit
   }
 
-  private validateStatus = (): boolean => {
-    if (this.status) {
-      return this.status
-    }
-
-    throw new Error('Conta inválida')
+  validateStatus = (): boolean => {
+      if  (this.status) {
+          return this.status
+      }
+      throw new Error('Conta inválida')
   }
 }
+
